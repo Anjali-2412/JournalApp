@@ -2,9 +2,11 @@ package net.app.journalApp.controller;
 
 import net.app.journalApp.entity.JournalEntry;
 import net.app.journalApp.service.JournalEntryService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ public class JournalEntryV2Controller {
 
     @PostMapping
     public boolean createEntry(@RequestBody JournalEntry myEntry) {
+        myEntry.setDate(LocalDate.now());
         journalEntryService.saveEntry(myEntry);
         return true;
     }
@@ -24,22 +27,23 @@ public class JournalEntryV2Controller {
 
     @GetMapping
     public List<JournalEntry> getAllEntry() {
-        return  null;
+        return journalEntryService.getAll();
     }
 
 
 
     @GetMapping("id/{myId}")
-    public JournalEntry getJournalEntryById(@PathVariable Long myId){
-        return null;
+    public JournalEntry getJournalEntryById(@PathVariable ObjectId myId){
+        return journalEntryService.findById(myId).orElse(null);
     }
 
     @DeleteMapping("id/{myId}")
-    public JournalEntry deleteJournalEntryById(@PathVariable Long myId){
-        return null;
+    public boolean deleteJournalEntryById(@PathVariable ObjectId myId){
+        journalEntryService.deleteById(myId);
+        return true;
     }
     @PutMapping("update/{myId}")
-    public boolean updateJournalEntryById(@PathVariable Long myId,@RequestBody JournalEntry myEntry){
+    public boolean updateJournalEntryById(@PathVariable ObjectId myId,@RequestBody JournalEntry myEntry){
 
         return true;
     }
