@@ -21,10 +21,17 @@ public class JournalEntryV2Controller {
     private JournalEntryService journalEntryService;
 
     @PostMapping
-    public boolean createEntry(@RequestBody JournalEntry myEntry) {
-        myEntry.setDate(LocalDate.now());
-        journalEntryService.saveEntry(myEntry);
-        return true;
+    public ResponseEntity<JournalEntry> createEntry(@RequestBody JournalEntry myEntry) {
+        try{
+            myEntry.setDate(LocalDate.now());
+            journalEntryService.saveEntry(myEntry);
+            return new ResponseEntity<>(myEntry,HttpStatus.CREATED);
+        }
+        catch (Exception e ){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 
 
