@@ -20,6 +20,9 @@ public class JournalEntryService  {
     @Autowired
     private UserService userService;
 
+    public void saveEntry(JournalEntry journalEntry){
+        journalEntryRepository.save(journalEntry);
+    }
 
     public void saveEntry (JournalEntry journalEntry, String username){
         User user = userService.findByUserName(username);
@@ -37,7 +40,10 @@ public class JournalEntryService  {
         return journalEntryRepository.findById(id);
     }
 
-    public void deleteById(ObjectId id){
+    public void deleteById(ObjectId id, String username){
+        User user = userService.findByUserName(username);
+        user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+        userService.saveUser(user);
         journalEntryRepository.deleteById(id);
     }
 
