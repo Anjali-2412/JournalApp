@@ -36,8 +36,12 @@ public class JournalEntryV2Controller {
 
 
     @GetMapping
-    public List<JournalEntry> getAllEntry() {
-        return journalEntryService.getAll();
+    public ResponseEntity<?> getAllEntry() {
+        List<JournalEntry> all = journalEntryService.getAll();
+        if(all != null && !all.isEmpty()){
+            return  new ResponseEntity<>(all,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
