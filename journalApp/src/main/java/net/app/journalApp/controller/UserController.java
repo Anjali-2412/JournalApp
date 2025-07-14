@@ -2,6 +2,7 @@ package net.app.journalApp.controller;
 
 import net.app.journalApp.entity.JournalEntry;
 import net.app.journalApp.entity.User;
+import net.app.journalApp.repository.UserRepository;
 import net.app.journalApp.service.JournalEntryService;
 import net.app.journalApp.service.UserService;
 import org.bson.types.ObjectId;
@@ -23,6 +24,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    @Autowired
+    private UserRepository userRepository;
+
+
     @GetMapping
     public List<User> getAllUser(){
         return userService.getAll();
@@ -38,6 +44,13 @@ public class UserController {
         userInDb.setUsername(user.getUsername());
         userInDb.setPassword(user.getPassword());
         userService.saveNewUser(userInDb);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteUserById(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        userRepository.deleteByUsername(authentication.getName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
